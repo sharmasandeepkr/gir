@@ -14,7 +14,7 @@ window.onload= function(){
                   alert(data)
               }
           );
-          $(".col-suggestions")
+          
       }
   })  
 }
