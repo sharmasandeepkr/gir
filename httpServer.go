@@ -3,106 +3,88 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"mongoClient"
 	"net/http"
-
-	"github.com/markbates/goth/providers/twitter"
-
-	"github.com/markbates/goth"
-	"github.com/markbates/goth/gothic"
+	"signin"
+	"sinit"
 
 	"github.com/gorilla/mux"
 	"google.golang.org/appengine"
 )
 
-// type Service struct {
-// 	serviceID       string
-// 	imageTag        string
-// 	serviceImgL     string
-// 	serviceImgR     string
-// 	serviceName     string
-// 	statitics       []string //[]filename
-// 	statiticsP      string   //it gives comparision of all farms statitics
-// 	datails         []string
-// 	serviceCalendar map[string][]string
-// 	//Details string
-// 	//optional options
+// type adapter func(http.Handler) http.Handler
+
+// func adapt(h http.Handler, adpaters ...adapter) http.Handler {
+// 	for _, adapter := range adpaters {
+// 		h = adapter(h)
+// 	}
+// 	return h
 // }
 
-//User is someone registered by any 0Auth
-// type User struct {
-// 	_id                       bson.ObjectId
-// 	optedServicesForFarms     map[string][]Service //map[farm][]services
-// 	userServiceSuggestions    map[string][]Service //map[farm][]services
-// 	lastTenServiceSuggestions map[string][]Service //map[farm][]services
-// 	oauths                    map[string]oauth
-// }
-// type oauth struct {
-// 	name        string
-// 	email       string
-// 	nickname    string
-// 	location    string
-// 	avtarURL    string
-// 	avtarimage  string
-// 	description string
-// 	userID      string
-// 	accessToken string
-// }
+// func withDB(db mongoClient.DataStore) adapter {
+// 	return func(h http.Handler) http.Handler {
+// 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-const (
-	twitterKey    = "nX911SXh3vhMEnv9f9pMlGK6k"
-	twitterSecret = "ndY07yS0KC6bGCqKmhLC1t7xkwbbTxa4n5zQGTjP8TRBAj1y9T"
-)
+// 			dbSession := db.Copy()
+// 			defer dbSession.Close()
+// 			context.Set(r, "database", dbSession)
+// 			h.ServeHTTP(w, r)
+
+// 		})
+// 	}
+// }
 
 var templates map[string]*template.Template
 
 func init() {
+	sinit.Init()
+	mongoClient.MyDB.ConnectDB()
 
-	if templates == nil {
-		templates = make(map[string]*template.Template)
-	}
-	templates["home"] = template.Must(template.ParseFiles("templates/nav.html", "templates/farmSmallDevices.html", "templates/optedServices.html", "templates/suggestions.html", "templates/statitics.html", "templates/farmLargeDevices.html", "templates/home.html"))
 }
+
 func temp(w http.ResponseWriter, r *http.Request) {
-	err := templates["home"].ExecuteTemplate(w, "home", "")
+	ses := mongoClient.MyDB.Session
+	myhandlerSes := ses
+	// defer myhandlerSes.Close()
+	col := myhandlerSes.DB("girgoras").C("isuggestions")
+	err := sinit.Templates["home"].ExecuteTemplate(w, "home", col)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "execution fails", 401)
 	}
 }
-func oauthHandler(res http.ResponseWriter, req *http.Request) {
-	user, err := gothic.CompleteUserAuth(res, req)
-	if err != nil {
-		http.Error(res, "not able to complete 0 authentication ", 404)
+func hsin(w http.ResponseWriter, r *http.Request) {
+	email := w.Header().Get("ggid")
+	if email == "" {
+		http.Redirect(w, r, "/home", http.StatusTemporaryRedirect)
 	}
-	t, err := template.New("userinfo").ParseFiles("template/userInfo.html")
+	err := sinit.Templates["sin"].ExecuteTemplate(w, "sin_home", email)
 	if err != nil {
-		http.Error(res, "not able to complete 0 authentication ", 404)
-	}
-	if err = t.ExecuteTemplate(res, "userInfo", user); err != nil {
-		http.Error(res, "not able to complete 0 authentication ", 404)
+		http.Redirect(w, r, "/home", http.StatusTemporaryRedirect)
 	}
 
 }
-func signup(w http.ResponseWriter, r *http.Request) {
-	t := template.New("singup")
-	t = template.Must(template.ParseFiles("templates/twitterlogin.html"))
-	t.ExecuteTemplate(w, "singup", nil)
+
+func decide(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/home", http.StatusTemporaryRedirect)
 }
 
 func main() {
-	goth.UseProviders(twitter.New(twitterKey, twitterSecret, "http://localhost:8080/auth/twitter/callback"))
-
-	r := mux.NewRouter()
+	fmt.Println("i am starting with all due permission to Gau Maa!")
+	defer mongoClient.MyDB.Close()
+	// h := adapt(http.HandlerFunc(temp), withDB(mongoClient.MyDB))
+	r := mux.NewRouter().StrictSlash(true)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	// r.HandleFunc("/", root.ServeRoot)
-	r.HandleFunc("/", temp)
-	r.HandleFunc("/twitter", gothic.BeginAuthHandler)
-	r.HandleFunc("/singup", signup)
-	r.HandleFunc("/0auth_callback", oauthHandler)
-	// r.HandleFunc("/isuggestion", mongoClient.WriteIsug)
+	r.Handle("/", signin.Hsin(http.HandlerFunc(decide)))
+	r.HandleFunc("/auth/gplus", signin.HandleLogin)
+	r.Handle("/auth/gplus/callback", signin.HandlerCallback(http.HandlerFunc(signin.HandleCallback)))
+	r.HandleFunc("/sin", hsin)
+	// r.Handle("/home", context.ClearHandler(h))
+	r.HandleFunc("/home", temp)
 	http.Handle("/", r)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		_ = fmt.Errorf("oh my god%v", err)
 	}
 	appengine.Main()
+
 }
