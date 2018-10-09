@@ -1,0 +1,15 @@
+{{define "test"}}
+<html>
+    <head>
+        <title>Test</title>
+    </head>
+    <body>
+        
+       {{ .Ucred }}
+       {{ .FarmLargeDevices.Adv.ImgURL }}
+       
+    </body>
+</html>
+{{end}}
+Ucred:            Ucred{Picture: "./static/cow.png"},
+		FarmLargeDevices: FarmLargeDevices{Adv: Adv{ImgURL: "www.google.com", Heading: "1st advertsiements"}},

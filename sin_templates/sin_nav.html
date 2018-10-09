@@ -1,4 +1,4 @@
-{{define "sin_nav"}}
+{{ define "sin_nav" }}
 <nav class="navbar fixed-top navbar-expand-lg navbar-light " style="background-color:#f7f7f7">                
     <a class="navbar-brand" href="#"><img src="./static/logoSmaller.jpeg" class="img-fluid" style="max-width:90px;max-height:90px;margin-left: 30px;"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -8,17 +8,16 @@
     <div class="collapse navbar-collapse " id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active" >
-          <a class="nav-link " href="#">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link " href="#">Home <span class="sr-only"></span></a>
         </li>
         <li class="nav-item dropdown" >
                 <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Dropdown
+                  {{ .Nav.DefaultLocation }}<span class="badge badge-round badge-danger">Edit</span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
+                {{ range $Index, $Location := .Nav.Locations }}
+                <a class="dropdown-item" href="#">{{ $Index }}.{{ $Location }}</a>
+                {{ end }}
                 </div>
         </li>
         <li class="nav-item" >
@@ -27,17 +26,16 @@
                         <button class="btn btn-outline-success " id="searchLocation" >Search</button>
                 </form>
         </li>
-        <li class="nav-item">
-          <button class="btn btn-outline-success " id="signin" ><a href="/auth/gplus">Signin</a></button>
+        <li class="nav-item " style="margin-left:21px;">
+          <button class="btn btn-outline-success " id="signin" ><a href="/auth/gplus">Switch Account</a></button>
         </li>
       
     
       </ul>
                                    
-                 <a class="nav-link" href="#"><img src="./static/farmer.png" style="max-width:42px;max-height:42px;" > User:xyz</a> 
-                 
-           
+                 <a class="nav-link" href="#"><img src={{ .Ucred.Picture }} style="max-width:42px;max-height:42px;" > {{ .Ucred.GivenName }}</a> 
+                  
     
     </div>
   </nav>
-{{end}}
+{{ end }}

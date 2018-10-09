@@ -5,12 +5,16 @@ import (
 	"html/template"
 	"mongoClient"
 	"net/http"
+	"os"
 	"signin"
 	"sinit"
+	"structData"
 
 	"github.com/gorilla/mux"
 	"google.golang.org/appengine"
 )
+
+var SinT *template.Template
 
 // type adapter func(http.Handler) http.Handler
 
@@ -34,30 +38,50 @@ import (
 // 	}
 // }
 
-var templates map[string]*template.Template
+// var templates map[string]*template.Template
 
 func init() {
 	sinit.Init()
-	mongoClient.MyDB.ConnectDB()
-
+	err := mongoClient.MyDB.ConnectDB()
+	if err != nil {
+		os.Exit(132)
+	}
+	// var err error
+	SinT, err = template.ParseFiles("sin_templates/sin_home.html", "sin_templates/sin_nav.html", "sin_templates/sin_farmSmallDevices.html", "sin_templates/sin_optedServices.html", "sin_templates/sin_suggestions.html", "sin_templates/sin_statistics.html", "sin_templates/sin_farmLargeDevices.html")
+	if err != nil {
+		fmt.Print(err.Error())
+		os.Exit(999)
+	}
 }
 
-func temp(w http.ResponseWriter, r *http.Request) {
-	ses := mongoClient.MyDB.Session
-	myhandlerSes := ses
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	// ses := mongoClient.MyDB.Session
+	// myhandlerSes := ses.Copy()
 	// defer myhandlerSes.Close()
-	col := myhandlerSes.DB("girgoras").C("isuggestions")
-	err := sinit.Templates["home"].ExecuteTemplate(w, "home", col)
+	// col := myhandlerSes.DB("girgoras").C("sinHome")
+	// genHomeData := structData.SinHome{}
+	// err := col.Find(bson.M{"ucred.name": "string `bson:name`"}).One(&genHomeData)
+	// if err != nil {
+	// 	os.Exit(12)
+	// }
+	err := sinit.Templates["home"].ExecuteTemplate(w, "home", "&genHomeData")
 	if err != nil {
-		http.Error(w, "execution fails", 401)
+		os.Exit(111)
+		//http.Error(w, "execution fails", 401)
 	}
 }
 func hsin(w http.ResponseWriter, r *http.Request) {
-	email := w.Header().Get("ggid")
-	if email == "" {
-		http.Redirect(w, r, "/home", http.StatusTemporaryRedirect)
-	}
-	err := sinit.Templates["sin"].ExecuteTemplate(w, "sin_home", email)
+	var sinData structData.SinHome
+	sinData = structData.SinHomeInstance
+	// ses := mongoClient.MyDB.Session
+	// myhandlerSes := ses
+	// // defer myhandlerSes.Close()
+	// col := myhandlerSes.DB("girgoras").C("sinHome")
+	// err := col.Find(bson.M{"ucred.name": "string `bson:name`"}).One(&sinData)
+	// if err != nil {
+	// 	os.Exit(12)
+	// }
+	err := SinT.ExecuteTemplate(w, "sin_home", &sinData)
 	if err != nil {
 		http.Redirect(w, r, "/home", http.StatusTemporaryRedirect)
 	}
@@ -70,8 +94,8 @@ func decide(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	fmt.Println("i am starting with all due permission to Gau Maa!")
-	defer mongoClient.MyDB.Close()
-	// h := adapt(http.HandlerFunc(temp), withDB(mongoClient.MyDB))
+	defer mongoClient.MyDB.Session.Close()
+	// h := adapt(http.HandlerFunc(homeHandler), withDB(mongoClient.MyDB))
 	r := mux.NewRouter().StrictSlash(true)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	r.Handle("/", signin.Hsin(http.HandlerFunc(decide)))
@@ -79,7 +103,7 @@ func main() {
 	r.Handle("/auth/gplus/callback", signin.HandlerCallback(http.HandlerFunc(signin.HandleCallback)))
 	r.HandleFunc("/sin", hsin)
 	// r.Handle("/home", context.ClearHandler(h))
-	r.HandleFunc("/home", temp)
+	r.HandleFunc("/home", homeHandler)
 	http.Handle("/", r)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
