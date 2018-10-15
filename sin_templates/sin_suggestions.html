@@ -3,29 +3,38 @@
     <div class="col ">
             <center>
                             
-                            <h6 style="text-align:center;margin-top:15px;"><span class="badge badge-alert">Suggested Services</span></h6>
-                            <img id="suggestionButton" src="./static/down.png" style="margin-top: -30px ;max-width:30px;max-height:30px;position: center" >
+                            <h6  style="text-align:center;margin-top:15px;font-size: 15px;"><span id="txtSuggest" class="badge badge-alert">Suggested Services</span></h6>
+                            <img id="suggestionButton" src="./static/down.png" style="margin-top: -30px ;max-width:30px;max-height:30px;position: center"  onclick="toggleSuggestions()">
                             
 
             </center>
     </div>
 </div>
-<div class="row" >
-            <div class="col col-suggestions  " >
-                            <div class="border rounded border-info" style="margin-top:12px;">
-                                            <div class="thumbnail " >
-                                                            <a href="#" style="margin-top:0px;"><span class="badge badge-danger">Details</span></a>
-                                                            <h6>
-                                                                    <img src= "./../static/uparrow.png" style="max-width:60px;max-height:60px;position: relative;"><img src="./../static/uparrow.png" style="max-width:60px;max-height:60px;">
-                                                                    <span class="badge badge-info">"service Name"</span>
-                                                                    <button class="btn btn-outline-info " style="margin-top:-15px;" type="submit"><span class="glyphicon glyphicon-search" ></span>Add</button><br>
 
-                                                            </h6>
-                                             </div>
-                                     
-                            </div>
-            </div>
+
+{{ range $ServiceName, $Row := .Suggestions.RowMap }}
+<div class="row suggestionRowClass"  >
+        <div class="col col-suggestions  " >
+                        <div class="border rounded border-info" style="margin-top:12px;background-color: white;">
+                                        <div class="thumbnail " >
+                                                        <h6 href=" {{ $Row.DetailsLink }} " style="margin-top:0px;">
+                                                                <span class="badge badge-info"><span id=" {{ $Row.ID }} "   onclick="(function() {alert('hello')})()" style="cursor: pointer;">Register</span> <mark onclick="(function(){alert('not me')})()" style="cursor:pointer">Details</mark></span>
+                                                                
+
+                                                                
+                                                        </h6>
+                                                        <h6>
+                                                                <Img src=" {{ $Row.Img }}  " style="max-height: 90px;max-width:190px;">
+                                                                <span class="badge badge-info" > {{ $ServiceName }} </span>
+
+                                                        </h6>
+                                         </div>
+                                 
+                        </div>
+        </div>
 </div>
+
+{{ end }}
 </div>
 
 {{ end }}

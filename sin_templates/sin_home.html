@@ -14,18 +14,23 @@
     <script src="static/main.js"></script> 
    
 </head>
-<body >
+<body style="background-color: #e6ecf0" >
  
        {{template "sin_nav" .}}
-        <div class="container-fluid" style="margin-top:42px;background-color: #f7f7f7">
+
+        <div class="container-fluid" style="margin-top:72px; ">
                 <div class="row">
-                        {{ template "sin_farmSmallDevices"  }}
-                        {{ template "sin_optedServices"  }}
-                        {{ template "sin_suggestions"  }}
-                        {{ template "sin_statistics"  }}
-                        {{ template "sin_farmLargeDevices"  }}                         
+                        {{ template "sin_farmSmallDevices" . }}
+                        {{ template "sin_optedServices" . }}
+                        {{ template "sin_suggestions" . }}
+                        {{ template "sin_statistics" . }}
+                        {{ template "sin_farmLargeDevices" . }}
+                        {{ template "sin_Products" . }}                         
                                     
-                        <div class="col d-md-none d-lg-none">
+                        
+                </div>
+                <div class="row col d-md-none d-lg-none">
+                        <div class="col">
                                 <h6 style="text-align:center;margin-left: 21px; margin-top: 12px;"><a href="#" style="font-size:12px;"><span class="badge badge-info" >Privacy</span></a><span class="dot"> . </span><a href="#" style="font-size:12px;">  <span class="badge badge-info" >Terms</span></a><span> . </span><a href="#" style="font-size:12px;">  <span class="badge badge-info" >About Us</span></a><span> . </span><a href="#" style="font-size:12px;"><span class="badge badge-danger">Gir-Goras &#169; 2018 </span></a></h6>   
                         </div>
                 </div>
