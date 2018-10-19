@@ -1,38 +1,52 @@
 {{ define "sin_farmSmallDevices" }}
-<div class="col  d-lg-none d-md-none" style="margin-top:51px;">
+<div class="col  d-lg-none d-md-none" >
                                             
-        <div class="row">
-                <div class="col">
-                        <h4  style="text-align:center;">
-                                        <img src="./static/FarmsDetails.png" style="max-width:60px;max-height:60px;">
-                                        <span class="badge badge-pill " style="text-align:center">Your Farms</span>
-                        </h4>
-                </div>
-        </div>
-        <div class="row flex flex-nowrap" style="overflow-x:scroll;">
-                    <div class="col border rounded border-danger" >
-                                    <div class="" >
-                                            <div class="thumbnail " style="margin-top:21px;">
-                                                            <img src="./static/cow.png" style="max-width:42px;max-height:42px;position: relative;">
-                                            </div>
-                                            <caption>
-                                                     <h6 style="text-align:center"><span class="badge badge-info">Gau-Awas</span></h6>
-                                            </caption> 
-                                    </div>
-                    </div>                            
-                    <div class="col border rounded "  >
-                                    <div class="" >
-                                            <div class="thumbnail " >
-                                                    <img src="./static/veg.png" style="max-width:90px;max-height:90px;position: relative;overflow: hidden;">
-                                            </div>
-                                            <caption>
-                                                 <h6 style="text-align:center;font-size: 12px;"><span class="badge badge-info">Vegtables Farm</span></h6>
-                                                 <h6 style="text-align:center"><span class="badge badge-danger">Comming Soon...</span></h6>
-                                            </caption> 
-                                    </div>
-                                              
-                    </div>           
-        </div>
+                <div   >
+                                             <h4  style="text-align:right">
+                                                        <span class="badge badge-rounded" style="background-color:#93b80e;font-size: 15px;margin-bottom: -60px;" > {{ .Ucred.GivenName }}'s <mark> <i>i </i>-Farms</mark> </span>
+                                             </h4>
+                              
+                                <div class="col "  style="margin-top:-9px;">
+                                  <div class="row border rounded border-success flex-row flex-nowrap" style="padding-bottom:12px;overflow-x: scroll;" >
+                                                
+                                             {{ range $Farm, $FarmStatus := .FarmLargeDevices.Farms }}
+                                             <div class="col "  >
+                                                     <div class="border rounded border-info" style="margin-top:12px; background-color: white;">
+                                                                     <h6 style="text-align:center;font-size: 21px;"><span class="badge badge-info">{{ $Farm }}</span></h6>
+                     
+                                                             <div class="thumbnail " style="margin-top:21px;">
+                                                                     <img src= "{{ $FarmStatus.Image }}" style="max-width:90px;max-height:90px;position: relative;overflow: hidden;">
+                                                             </div>
+                                                             <caption>
+                                                             <h6 style="text-align:center"><span class="badge badge-danger">{{ $FarmStatus.Text }}</span></h6>
+                                                             <h6 style="text-align:center"><img src=" {{ $FarmStatus.LiveSymbol }} " style="max-width:21px;max-height:21px;"><span class=" {{ $FarmStatus.Badge }} " style="text-align:center;"> {{if  $FarmStatus.Live }} Live {{ else }} Not Live  {{ end }} </span></h6>
+                                                             </caption> 
+                                                     </div>
+                                                             
+                                             </div>
+                                             {{end}}
+                                             {{ range $Farm, $FarmStatus := .FarmLargeDevices.Farms }}
+                                             <div class="col "  >
+                                                     <div class="border rounded border-info" style="margin-top:12px; background-color: white;">
+                                                                     <h6 style="text-align:center;font-size: 21px;"><span class="badge badge-info">{{ $Farm }}</span></h6>
+                     
+                                                             <div class="thumbnail " style="margin-top:21px;">
+                                                                     <img src= "{{ $FarmStatus.Image }}" style="max-width:90px;max-height:90px;position: relative;overflow: hidden;">
+                                                             </div>
+                                                             <caption>
+                                                             <h6 style="text-align:center"><span class="badge badge-danger">{{ $FarmStatus.Text }}</span></h6>
+                                                             <h6 style="text-align:center"><img src=" {{ $FarmStatus.LiveSymbol }} " style="max-width:21px;max-height:21px;"><span class=" {{ $FarmStatus.Badge }} " style="text-align:center;"> {{if  $FarmStatus.Live }} Live {{ else }} Not Live  {{ end }} </span></h6>
+                                                             </caption> 
+                                                     </div>
+                                                             
+                                             </div>
+                                             {{end}}
+                                            
+                                  </div>
+                                 
+                                </div>
+                                                
+                </div> 
     
 </div>
 {{ end }}

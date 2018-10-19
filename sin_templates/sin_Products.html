@@ -1,66 +1,34 @@
 {{ define "sin_Products" }}
-    <div class="col-2 d-none d-sm-block" style="overflow-y:scroll;height: 600px;">
-        <div class="row" style="float:right;margin-top: 12px;">
-            <div class="border rounded border-info">
-                    <div class="col " >
-                        <h6 style="float:right;font-size: 30px;"><span class="badge badge-info badge-rounded " style="float:right;">Products</span></h6>
+    <div class="col-2 d-none d-sm-block" style="overflow-y:scroll;height: 600px;background-color: rgb(221, 233, 229)">
+        <div class="row" style="float:right;margin-bottom: 3px;">
+                    <div class="col border-bottom " >
+                        <h6 style="float:right;font-size: 12px;margin-right: -15px;"><span class="badge badge-info badge-rounded " style="float:right;font-size: 12px;">Gaushala's <mark>Products</mark></span></h6>
                     </div>
-            </div>
         </div>
-                <div class="row" style="float:right;margin-top: 12px;">
-                        <div class=" border rounded border-info">
-        
-                    <div class="col">
-                                    <img src="./../static/logo.jpg" style="max-width:120px;max-height:120px;margin-right:0px;float:right;">
-                            
+        <div class="row border-dark border-top" style="padding-bottom:1px;margin-top:15px;"></div>
+            
+                    {{ range $index, $Product := .ProductsArr }}
+                    <div class="row" style="margin-top: 18px;width:150px;margin-left:3px;">
+                        <div class=" border rounded border-info" style="background-color:white;" >
+                            <div class="col">
+                                <h6 style="width:150px;" ><span class="badge badge-secondary" style="font-size:12px;">{{ $Product.Name }}</span></h6>
+                                <img src= " {{ $Product.Image }} " style="max-width:120px;max-height:12j0px;margin-right:0px;float:right;">
+                            </div>
+                        </div>
                     </div>
+                    <div class="row" style="margin-bottom: 21px;">
+                                    <div class="col" style="float:left;margin-left:-15px;">
+                                        <h6 class="border rounded border-info" style="text-align:left:">
+                                            <span class="badge badge-danger"  style="font-size:12px;">Add To Cart <mark style="font-size: 12px;">Buy Now</mark></span>
+                                        </h6>
+                                    </div>
+                                    <div class="col">
+                                        
+                                    </div>
                     </div>
-                </div>
-                <div class="row" style="float:right;margin-top: 12px;">
-                        <div class=" border rounded border-info">
-        
-                    <div class="col">
-                                    <img src="./../static/logo.jpg" style="max-width:120px;max-height:120px;margin-right:0px;float:right;">
-                            
-                    </div>
-                    </div>
-                </div>
-                <div class="row" style="float:right;margin-top: 12px;">
-                        <div class=" border rounded border-info">
-        
-                    <div class="col">
-                                    <img src="./../static/logo.jpg" style="max-width:120px;max-height:120px;margin-right:0px;float:right;">
-                            
-                    </div>
-                    </div>
-                </div>
-                <div class="row" style="float:right;margin-top: 12px;">
-                        <div class=" border rounded border-info">
-        
-                    <div class="col">
-                                    <img src="./../static/logo.jpg" style="max-width:120px;max-height:120px;margin-right:0px;float:right;">
-                            
-                    </div>
-                    </div>
-                </div>
-                <div class="row" style="float:right;margin-top: 12px;">
-                        <div class=" border rounded border-info">
-        
-                    <div class="col">
-                                    <img src="./../static/logo.jpg" style="max-width:120px;max-height:120px;margin-right:0px;float:right;">
-                            
-                    </div>
-                    </div>
-                </div>
-                <div class="row" style="float:right;margin-top: 12px;">
-                        <div class=" border rounded border-info">
-        
-                    <div class="col">
-                                    <img src="./../static/logo.jpg" style="max-width:120px;max-height:120px;margin-right:0px;float:right;">
-                            
-                    </div>
-                    </div>
-                </div>
+    
+                {{ end }}
+         
       <!-- mamu :  -->
         
     </div>
